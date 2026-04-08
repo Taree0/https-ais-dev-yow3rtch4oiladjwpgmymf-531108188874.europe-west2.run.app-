@@ -12,6 +12,12 @@ export interface Player {
   rarity: 'common' | 'rare' | 'legendary';
   image: string;
   shiny?: boolean;
+  age?: number;
+  stats?: {
+    goals: number;
+    assists: number;
+    appearances: number;
+  };
 }
 
 export const GROUPS: Record<string, string[]> = {
@@ -83,36 +89,36 @@ export const NATION_BACKGROUNDS: Record<string, string> = {
 };
 
 export const USMNT_PLAYERS: Player[] = [
-  { id: "SAD_1", name: "Matt Freese", position: 'GK', number: 1, club: "New York City FC", rarity: 'rare', image: "https://picsum.photos/seed/freese/400/600" },
-  { id: "SAD_2", name: "Matt Turner", position: 'GK', number: 12, club: "New England Revolution", rarity: 'rare', image: "https://picsum.photos/seed/turner/400/600" },
-  { id: "SAD_3", name: "Tim Ream", position: 'DF', number: 13, club: "Charlotte FC", rarity: 'legendary', image: "https://picsum.photos/seed/ream/400/600" },
-  { id: "SAD_4", name: "Chris Richards", position: 'DF', number: 4, club: "Crystal Palace", rarity: 'rare', image: "https://picsum.photos/seed/richards/400/600" },
-  { id: "SAD_5", name: "Antonee Robinson", position: 'DF', number: 5, club: "Fulham", rarity: 'rare', image: "https://picsum.photos/seed/antonee/400/600" },
-  { id: "SAD_6", name: "Weston McKennie", position: 'MF', number: 8, club: "Juventus", rarity: 'legendary', image: "https://picsum.photos/seed/mckennie/400/600" },
-  { id: "SAD_7", name: "Gio Reyna", position: 'MF', number: 7, club: "Borussia Mönchengladbach", rarity: 'rare', image: "https://picsum.photos/seed/reyna/400/600" },
-  { id: "SAD_8", name: "Malik Tillman", position: 'MF', number: 10, club: "Bayer Leverkusen", rarity: 'rare', image: "https://picsum.photos/seed/tillman/400/600" },
-  { id: "SAD_9", name: "Christian Pulisic", position: 'FW', number: 11, club: "AC Milan", rarity: 'legendary', image: "https://picsum.photos/seed/pulisic/400/600" },
-  { id: "SAD_10", name: "Folarin Balogun", position: 'FW', number: 20, club: "AS Monaco", rarity: 'rare', image: "https://picsum.photos/seed/balogun/400/600" },
-  { id: "SAD_11", name: "Ricardo Pepi", position: 'FW', number: 9, club: "PSV Eindhoven", rarity: 'rare', image: "https://picsum.photos/seed/pepi/400/600" },
-  { id: "SAD_12", name: "Timothy Weah", position: 'FW', number: 22, club: "Marseille", rarity: 'rare', image: "https://picsum.photos/seed/weah/400/600" },
-  { id: "SAD_13", name: "Tanner Tessmann", position: 'MF', number: 15, club: "Lyon", rarity: 'rare', image: "https://picsum.photos/seed/tessmann/400/600" },
-  { id: "SAD_14", name: "Alex Freeman", position: 'DF', number: 2, club: "Villarreal", rarity: 'rare', image: "https://picsum.photos/seed/freeman/400/600" },
-  { id: "SAD_15", name: "Johnny Cardoso", position: 'MF', number: 6, club: "Atlético Madrid", rarity: 'rare', image: "https://picsum.photos/seed/cardoso/400/600" },
-  { id: "SAD_16", name: "Patrick Agyemang", position: 'FW', number: 19, club: "Derby County", rarity: 'common', image: "https://picsum.photos/seed/agyemang/400/600" },
+  { id: "SAD_1", name: "Matt Freese", position: 'GK', number: 1, club: "New York City FC", rarity: 'rare', image: "https://picsum.photos/seed/freese/400/600", age: 27, stats: { goals: 0, assists: 0, appearances: 3 } },
+  { id: "SAD_2", name: "Matt Turner", position: 'GK', number: 12, club: "New England Revolution", rarity: 'rare', image: "https://picsum.photos/seed/turner/400/600", age: 31, stats: { goals: 0, assists: 0, appearances: 53 } },
+  { id: "SAD_3", name: "Tim Ream", position: 'DF', number: 13, club: "Charlotte FC", rarity: 'legendary', image: "https://picsum.photos/seed/ream/400/600", age: 38, stats: { goals: 1, assists: 0, appearances: 64 } },
+  { id: "SAD_4", name: "Chris Richards", position: 'DF', number: 4, club: "Crystal Palace", rarity: 'rare', image: "https://picsum.photos/seed/richards/400/600", age: 26, stats: { goals: 1, assists: 1, appearances: 21 } },
+  { id: "SAD_5", name: "Antonee Robinson", position: 'DF', number: 5, club: "Fulham", rarity: 'rare', image: "https://picsum.photos/seed/antonee/400/600", age: 28, stats: { goals: 4, assists: 7, appearances: 46 } },
+  { id: "SAD_6", name: "Weston McKennie", position: 'MF', number: 8, club: "Juventus", rarity: 'legendary', image: "https://picsum.photos/seed/mckennie/400/600", age: 27, stats: { goals: 11, assists: 5, appearances: 53 } },
+  { id: "SAD_7", name: "Gio Reyna", position: 'MF', number: 7, club: "Borussia Mönchengladbach", rarity: 'rare', image: "https://picsum.photos/seed/reyna/400/600", age: 23, stats: { goals: 8, assists: 4, appearances: 31 } },
+  { id: "SAD_8", name: "Malik Tillman", position: 'MF', number: 10, club: "Bayer Leverkusen", rarity: 'rare', image: "https://picsum.photos/seed/tillman/400/600", age: 23, stats: { goals: 2, assists: 3, appearances: 14 } },
+  { id: "SAD_9", name: "Christian Pulisic", position: 'FW', number: 11, club: "AC Milan", rarity: 'legendary', image: "https://picsum.photos/seed/pulisic/400/600", age: 27, stats: { goals: 31, assists: 16, appearances: 72 } },
+  { id: "SAD_10", name: "Folarin Balogun", position: 'FW', number: 20, club: "AS Monaco", rarity: 'rare', image: "https://picsum.photos/seed/balogun/400/600", age: 24, stats: { goals: 5, assists: 2, appearances: 17 } },
+  { id: "SAD_11", name: "Ricardo Pepi", position: 'FW', number: 9, club: "PSV Eindhoven", rarity: 'rare', image: "https://picsum.photos/seed/pepi/400/600", age: 23, stats: { goals: 10, assists: 3, appearances: 28 } },
+  { id: "SAD_12", name: "Timothy Weah", position: 'FW', number: 22, club: "Marseille", rarity: 'rare', image: "https://picsum.photos/seed/weah/400/600", age: 26, stats: { goals: 6, assists: 5, appearances: 41 } },
+  { id: "SAD_13", name: "Tanner Tessmann", position: 'MF', number: 15, club: "Lyon", rarity: 'rare', image: "https://picsum.photos/seed/tessmann/400/600", age: 24, stats: { goals: 0, assists: 1, appearances: 5 } },
+  { id: "SAD_14", name: "Alex Freeman", position: 'DF', number: 2, club: "Villarreal", rarity: 'rare', image: "https://picsum.photos/seed/freeman/400/600", age: 21, stats: { goals: 0, assists: 0, appearances: 2 } },
+  { id: "SAD_15", name: "Johnny Cardoso", position: 'MF', number: 6, club: "Atlético Madrid", rarity: 'rare', image: "https://picsum.photos/seed/cardoso/400/600", age: 24, stats: { goals: 0, assists: 0, appearances: 11 } },
+  { id: "SAD_16", name: "Patrick Agyemang", position: 'FW', number: 19, club: "Derby County", rarity: 'common', image: "https://picsum.photos/seed/agyemang/400/600", age: 25, stats: { goals: 1, assists: 0, appearances: 4 } },
 ];
 
 export const BIH_PLAYERS: Player[] = [
-  { id: "BiH_1", name: "Nikola Vasilj", position: 'GK', number: 1, club: "St. Pauli", rarity: 'common', image: "https://picsum.photos/seed/vasilj/400/600" },
-  { id: "BiH_2", name: "Anel Ahmedhodžić", position: 'DF', number: 16, club: "Sheffield United", rarity: 'rare', image: "https://picsum.photos/seed/anel/400/600" },
-  { id: "BiH_3", name: "Sead Kolašinac", position: 'DF', number: 5, club: "Atalanta", rarity: 'rare', image: "https://picsum.photos/seed/sead/400/600" },
-  { id: "BiH_4", name: "Amar Dedić", position: 'DF', number: 2, club: "RB Salzburg", rarity: 'rare', image: "https://picsum.photos/seed/amar/400/600" },
-  { id: "BiH_5", name: "Jusuf Gazibegović", position: 'DF', number: 4, club: "Sturm Graz", rarity: 'common', image: "https://picsum.photos/seed/jusuf/400/600" },
-  { id: "BiH_6", name: "Benjamin Tahirović", position: 'MF', number: 8, club: "Ajax", rarity: 'rare', image: "https://picsum.photos/seed/benjamin/400/600" },
-  { id: "BiH_7", name: "Armin Gigović", position: 'MF', number: 18, club: "Holstein Kiel", rarity: 'common', image: "https://picsum.photos/seed/armin/400/600" },
-  { id: "BiH_8", name: "Denis Huseinbašić", position: 'MF', number: 20, club: "FC Köln", rarity: 'common', image: "https://picsum.photos/seed/denis/400/600" },
-  { id: "BiH_9", name: "Edin Džeko", position: 'FW', number: 11, club: "Fenerbahçe", rarity: 'legendary', image: "https://picsum.photos/seed/dzeko_sticker/400/600" },
-  { id: "BiH_10", name: "Ermedin Demirović", position: 'FW', number: 10, club: "Stuttgart", rarity: 'rare', image: "https://picsum.photos/seed/ermedin/400/600" },
-  { id: "BiH_11", name: "Haris Tabaković", position: 'FW', number: 9, club: "Hoffenheim", rarity: 'common', image: "https://picsum.photos/seed/haris/400/600" },
+  { id: "BiH_1", name: "Nikola Vasilj", position: 'GK', number: 1, club: "St. Pauli", rarity: 'common', image: "https://picsum.photos/seed/vasilj/400/600", age: 30, stats: { goals: 0, assists: 0, appearances: 12 } },
+  { id: "BiH_2", name: "Anel Ahmedhodžić", position: 'DF', number: 16, club: "Sheffield United", rarity: 'rare', image: "https://picsum.photos/seed/anel/400/600", age: 27, stats: { goals: 1, assists: 0, appearances: 24 } },
+  { id: "BiH_3", name: "Sead Kolašinac", position: 'DF', number: 5, club: "Atalanta", rarity: 'rare', image: "https://picsum.photos/seed/sead/400/600", age: 32, stats: { goals: 3, assists: 5, appearances: 58 } },
+  { id: "BiH_4", name: "Amar Dedić", position: 'DF', number: 2, club: "RB Salzburg", rarity: 'rare', image: "https://picsum.photos/seed/amar/400/600", age: 23, stats: { goals: 1, assists: 2, appearances: 15 } },
+  { id: "BiH_5", name: "Jusuf Gazibegović", position: 'DF', number: 4, club: "Sturm Graz", rarity: 'common', image: "https://picsum.photos/seed/jusuf/400/600", age: 26, stats: { goals: 0, assists: 1, appearances: 18 } },
+  { id: "BiH_6", name: "Benjamin Tahirović", position: 'MF', number: 8, club: "Ajax", rarity: 'rare', image: "https://picsum.photos/seed/benjamin/400/600", age: 23, stats: { goals: 0, assists: 1, appearances: 10 } },
+  { id: "BiH_7", name: "Armin Gigović", position: 'MF', number: 18, club: "Holstein Kiel", rarity: 'common', image: "https://picsum.photos/seed/armin/400/600", age: 24, stats: { goals: 0, assists: 0, appearances: 5 } },
+  { id: "BiH_8", name: "Denis Huseinbašić", position: 'MF', number: 20, club: "FC Köln", rarity: 'common', image: "https://picsum.photos/seed/denis/400/600", age: 24, stats: { goals: 0, assists: 0, appearances: 4 } },
+  { id: "BiH_9", name: "Edin Džeko", position: 'FW', number: 11, club: "Fenerbahçe", rarity: 'legendary', image: "https://picsum.photos/seed/dzeko_sticker/400/600", age: 40, stats: { goals: 65, assists: 28, appearances: 134 } },
+  { id: "BiH_10", name: "Ermedin Demirović", position: 'FW', number: 10, club: "Stuttgart", rarity: 'rare', image: "https://picsum.photos/seed/ermedin/400/600", age: 28, stats: { goals: 2, assists: 3, appearances: 26 } },
+  { id: "BiH_11", name: "Haris Tabaković", position: 'FW', number: 9, club: "Hoffenheim", rarity: 'common', image: "https://picsum.photos/seed/haris/400/600", age: 31, stats: { goals: 0, assists: 0, appearances: 3 } },
 ];
 
 export const LEGENDS: Player[] = [

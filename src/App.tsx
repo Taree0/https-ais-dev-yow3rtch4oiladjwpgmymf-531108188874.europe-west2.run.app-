@@ -10,13 +10,19 @@ import {
   X,
   Send,
   Zap,
+  BarChart3,
+  ShoppingBag,
+  CreditCard,
+  Wallet,
+  CheckCircle2,
+  ChevronRight,
 } from 'lucide-react';
 import { GoogleGenAI, Type } from "@google/genai";
 import { NATIONS, GROUPS, Player, USMNT_PLAYERS, BIH_PLAYERS, NATION_BACKGROUNDS, SPECIAL_STICKERS } from './data';
 import confetti from 'canvas-confetti';
 
 // --- Types ---
-type View = 'album' | 'pack' | 'schedule' | 'info';
+type View = 'album' | 'pack' | 'schedule' | 'info' | 'stats' | 'shop';
 
 interface CollectedSticker {
   name: string;
@@ -160,9 +166,281 @@ const StickerSlot: React.FC<{
   );
 };
 
+const StatsSection: React.FC = () => {
+  const allPlayers = useMemo(() => {
+    return [...USMNT_PLAYERS, ...BIH_PLAYERS];
+  }, []);
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-6xl mx-auto pb-24"
+    >
+      <div className="flex items-center gap-3 mb-8">
+        <BarChart3 className="text-neon-cyan" size={24} />
+        <h2 className="text-2xl font-black italic uppercase tracking-tighter flex items-center gap-3">
+          Statistika Igrača
+          <img src="https://flagcdn.com/w40/us.png" alt="USA" className="h-5 rounded-sm shadow-sm" referrerPolicy="no-referrer" />
+        </h2>
+      </div>
+
+      <div className="glass-card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-white/5 border-b border-white/10">
+                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-gray-400">Igrač</th>
+                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-gray-400">Tim</th>
+                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-gray-400">Pozicija</th>
+                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-gray-400">Godine</th>
+                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-gray-400 text-center">Nastupi</th>
+                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-gray-400 text-center">Golovi</th>
+                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-gray-400 text-center">Asistencije</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allPlayers.map((player) => {
+                const isUSA = player.id.startsWith('SAD');
+                const flagCode = isUSA ? 'us' : 'ba';
+                return (
+                  <tr key={player.id} className="border-b border-white/5 hover:bg-white/5 transition">
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-10 bg-white/10 rounded overflow-hidden">
+                          <img src={player.image} alt={player.name} className="w-full h-full object-cover" />
+                        </div>
+                        <span className="font-bold text-sm">{player.name}</span>
+                      </div>
+                    </td>
+                    <td className="p-4 text-xs font-medium text-gray-400">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src={`https://flagcdn.com/w20/${flagCode}.png`} 
+                          alt={isUSA ? 'SAD' : 'BiH'} 
+                          className="h-3 rounded-xs" 
+                          referrerPolicy="no-referrer"
+                        />
+                        {isUSA ? 'SAD' : 'BiH'}
+                      </div>
+                    </td>
+                    <td className="p-4 text-xs font-medium text-gray-400">{player.position}</td>
+                    <td className="p-4 text-xs font-medium text-gray-400">{player.age || 'TBD'}</td>
+                    <td className="p-4 text-xs font-black text-center">{player.stats?.appearances ?? '0'}</td>
+                    <td className="p-4 text-xs font-black text-center text-neon-cyan">{player.stats?.goals ?? '0'}</td>
+                    <td className="p-4 text-xs font-black text-center text-gold">{player.stats?.assists ?? '0'}</td>
+                  </tr>
+                );
+              })}
+              {/* Placeholder for other nations */}
+              <tr className="bg-white/5">
+                <td colSpan={7} className="p-8 text-center text-xs text-gray-500 italic uppercase tracking-widest">
+                  Statistika za ostale reprezentacije će biti dostupna nakon početka turnira
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const ShopSection: React.FC<{ onOpenPack: () => void, isOpening: boolean }> = ({ onOpenPack, isOpening }) => {
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [paymentStep, setPaymentStep] = useState<'select' | 'processing' | 'success'>('select');
+  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+
+  const handlePayment = () => {
+    if (!selectedMethod) return;
+    setPaymentStep('processing');
+    
+    // Simulate payment processing
+    setTimeout(() => {
+      setPaymentStep('success');
+      setTimeout(() => {
+        setShowCheckout(false);
+        setPaymentStep('select');
+        setSelectedMethod(null);
+        onOpenPack();
+      }, 1500);
+    }, 2000);
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-4xl mx-auto pb-24 text-center"
+    >
+      <div className="flex flex-col items-center gap-6 mb-12">
+        <div className="w-20 h-20 bg-gold rounded-3xl flex items-center justify-center shadow-[0_0_30px_rgba(255,207,64,0.3)]">
+          <ShoppingBag size={40} className="text-black" />
+        </div>
+        <div>
+          <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-2">Bosnuka Shop</h2>
+          <p className="text-gray-400 uppercase tracking-widest text-[10px] font-bold">Ekskluzivno mjesto za kupovinu sličica</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="glass-card p-8 flex flex-col items-center text-center group hover:border-gold/50 transition-colors">
+          <div className="relative mb-6">
+            <Package size={80} className="text-gold group-hover:scale-110 transition-transform duration-500" />
+            <div className="absolute -top-2 -right-2 bg-neon-cyan text-black text-[8px] font-black px-2 py-1 rounded-full uppercase">Novo</div>
+          </div>
+          <h3 className="text-xl font-black uppercase mb-2">Standardni Paketić</h3>
+          <p className="text-xs text-gray-400 mb-6">Sadrži 5 nasumičnih sličica iz kolekcije SP 2026.</p>
+          <div className="text-2xl font-black text-gold mb-6">2.50 KM</div>
+          <button 
+            onClick={() => setShowCheckout(true)}
+            disabled={isOpening}
+            className="w-full bg-gold text-black py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-yellow-400 transition transform active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            <Zap size={16} />
+            Kupi Paketić
+          </button>
+        </div>
+
+        <div className="glass-card p-8 flex flex-col items-center text-center opacity-50 cursor-not-allowed">
+          <div className="relative mb-6">
+            <Sparkles size={80} className="text-neon-cyan" />
+          </div>
+          <h3 className="text-xl font-black uppercase mb-2">Premium Paketić</h3>
+          <p className="text-xs text-gray-400 mb-6">Veća šansa za dobijanje sjajnih i specijalnih sličica.</p>
+          <div className="text-2xl font-black text-neon-cyan mb-6">7.00 KM</div>
+          <button 
+            disabled
+            className="w-full bg-white/5 text-white/40 py-4 rounded-xl font-black uppercase tracking-widest text-xs border border-white/10"
+          >
+            Uskoro dostupno
+          </button>
+        </div>
+      </div>
+
+      {/* Checkout Modal */}
+      <AnimatePresence>
+        {showCheckout && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center px-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/90 backdrop-blur-xl"
+              onClick={() => !isOpening && paymentStep === 'select' && setShowCheckout(false)}
+            />
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="glass-card w-full max-w-md relative z-10 overflow-hidden p-8"
+            >
+              {paymentStep === 'select' && (
+                <>
+                  <div className="flex justify-between items-center mb-8">
+                    <h3 className="text-2xl font-black uppercase italic tracking-tighter">Plaćanje</h3>
+                    <button onClick={() => setShowCheckout(false)} className="text-white/40 hover:text-white">
+                      <X size={20} />
+                    </button>
+                  </div>
+
+                  <div className="space-y-4 mb-8">
+                    <button 
+                      onClick={() => setSelectedMethod('card')}
+                      className={`w-full p-4 rounded-xl border transition flex items-center justify-between ${
+                        selectedMethod === 'card' ? 'border-neon-cyan bg-neon-cyan/10' : 'border-white/10 bg-white/5 hover:bg-white/10'
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <CreditCard className={selectedMethod === 'card' ? 'text-neon-cyan' : 'text-white/60'} />
+                        <div className="text-left">
+                          <p className="text-sm font-bold uppercase">Kreditna Kartica</p>
+                          <p className="text-[10px] text-gray-500">Visa, Mastercard, Maestro</p>
+                        </div>
+                      </div>
+                      <ChevronRight size={16} className="text-white/20" />
+                    </button>
+
+                    <button 
+                      onClick={() => setSelectedMethod('wallet')}
+                      className={`w-full p-4 rounded-xl border transition flex items-center justify-between ${
+                        selectedMethod === 'wallet' ? 'border-gold bg-gold/10' : 'border-white/10 bg-white/5 hover:bg-white/10'
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <Wallet className={selectedMethod === 'wallet' ? 'text-gold' : 'text-white/60'} />
+                        <div className="text-left">
+                          <p className="text-sm font-bold uppercase">Bosnuka Wallet</p>
+                          <p className="text-[10px] text-gray-500">Stanje: 12.50 KM</p>
+                        </div>
+                      </div>
+                      <ChevronRight size={16} className="text-white/20" />
+                    </button>
+                  </div>
+
+                  <div className="bg-white/5 p-4 rounded-xl mb-8 border border-white/5">
+                    <div className="flex justify-between text-xs uppercase font-bold text-gray-400 mb-2">
+                      <span>Stavka</span>
+                      <span>Cijena</span>
+                    </div>
+                    <div className="flex justify-between text-sm font-black uppercase italic">
+                      <span>Standardni Paketić</span>
+                      <span className="text-gold">2.50 KM</span>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={handlePayment}
+                    disabled={!selectedMethod}
+                    className="w-full bg-neon-cyan text-black py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-cyan-400 transition transform active:scale-95 disabled:opacity-50"
+                  >
+                    Potvrdi Plaćanje
+                  </button>
+                </>
+              )}
+
+              {paymentStep === 'processing' && (
+                <div className="py-12 flex flex-col items-center">
+                  <div className="w-16 h-16 border-4 border-neon-cyan border-t-transparent rounded-full animate-spin mb-6" />
+                  <h3 className="text-xl font-black uppercase italic mb-2">Obrađujem...</h3>
+                  <p className="text-xs text-gray-400 uppercase tracking-widest">Molimo sačekajte trenutak</p>
+                </div>
+              )}
+
+              {paymentStep === 'success' && (
+                <div className="py-12 flex flex-col items-center">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,197,94,0.4)]"
+                  >
+                    <CheckCircle2 size={32} className="text-white" />
+                  </motion.div>
+                  <h3 className="text-xl font-black uppercase italic mb-2">Uspješno!</h3>
+                  <p className="text-xs text-gray-400 uppercase tracking-widest">Vaš paketić je spreman</p>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      <div className="mt-16 p-8 glass-card border-neon-cyan/20">
+        <h4 className="text-neon-cyan font-black uppercase tracking-widest text-[10px] mb-4">Informacije o dostavi</h4>
+        <p className="text-xs text-gray-400 leading-relaxed">
+          Sve digitalne sličice kupljene u Bosnuka Shopu se automatski dodaju u vaš album. 
+          Sličice se ne mogu kupiti nigdje drugo osim u zvaničnom shopu.
+        </p>
+      </div>
+    </motion.div>
+  );
+};
+
 // --- Main App ---
 
 export default function App() {
+  const [view, setView] = useState<View>('album');
   const [currentGroup, setCurrentGroup] = useState('A');
   const [stadiumBg, setStadiumBg] = useState<string | null>(null);
 
@@ -236,9 +514,10 @@ export default function App() {
         For the team "SAD" (USA), use names from this roster if possible: ${JSON.stringify(USMNT_PLAYERS.map(p => p.name))}.
         For the team "BiH" (Bosnia), use names from this roster if possible: ${JSON.stringify(BIH_PLAYERS.map(p => p.name))}.`;
 
-        const response = await ai.getGenerativeModel({ model: "gemini-3-flash-preview" }).generateContent({
+        const response = await ai.models.generateContent({
+          model: "gemini-3-flash-preview",
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: {
+          config: {
             responseMimeType: "application/json",
             responseSchema: {
               type: Type.ARRAY,
@@ -255,7 +534,7 @@ export default function App() {
           }
         });
 
-        const players = JSON.parse(response.response.text() || '[]');
+        const players = JSON.parse(response.text || '[]');
         results = players.map((p: any) => ({
           ...p,
           shiny: Math.random() > 0.85,
@@ -324,10 +603,12 @@ export default function App() {
     setIsChatLoading(true);
 
     try {
-      const model = ai.getGenerativeModel({ model: "gemini-3-flash-preview" });
       const prompt = `Odgovori kao stručnjak za Svjetsko Prvenstvo 2026 i album Bosnuka na bosanskom jeziku. Pitanje: ${userMsg}`;
-      const result = await model.generateContent(prompt);
-      const responseText = result.response.text();
+      const result = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt
+      });
+      const responseText = result.text;
       
       setChatMessages(prev => [...prev, { role: 'ai', text: responseText }]);
     } catch (error) {
@@ -345,10 +626,12 @@ export default function App() {
     setMotivationalSpeech('Sastavljam govor...');
 
     try {
-      const model = ai.getGenerativeModel({ model: "gemini-3-flash-preview" });
       const prompt = "Write a 2-sentence inspirational locker room speech for a football team going into the World Cup final 2026. In Bosnian language.";
-      const result = await model.generateContent(prompt);
-      setMotivationalSpeech(result.response.text());
+      const result = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt
+      });
+      setMotivationalSpeech(result.text);
     } catch (error) {
       setMotivationalSpeech("Motivacija trenutno nije dostupna, ali mi vjerujemo u vas!");
     } finally {
@@ -368,14 +651,16 @@ export default function App() {
       const reader = new FileReader();
       reader.onloadend = async () => {
         const base64Data = (reader.result as string).split(',')[1];
-        const model = ai.getGenerativeModel({ model: "gemini-3-flash-preview" });
         
-        const result = await model.generateContent([
-          { text: "Analyze this image of a football sticker. Estimate the rarity (1-10) and the potential market value in 2026. Be concise and professional in Bosnian." },
-          { inlineData: { mimeType: file.type, data: base64Data } }
-        ]);
+        const result = await ai.models.generateContent({
+          model: "gemini-3-flash-preview",
+          contents: [
+            { text: "Analyze this image of a football sticker. Estimate the rarity (1-10) and the potential market value in 2026. Be concise and professional in Bosnian." },
+            { inlineData: { mimeType: file.type, data: base64Data } }
+          ]
+        });
         
-        setRarityResult(result.response.text());
+        setRarityResult(result.text);
       };
       reader.readAsDataURL(file);
     } catch (error) {
@@ -411,13 +696,6 @@ export default function App() {
             </div>
           </div>
           <button 
-            onClick={openPack}
-            disabled={isOpeningPack}
-            className="bg-yellow-500 text-black px-4 md:px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-yellow-400 transition transform active:scale-95 shadow-lg disabled:opacity-50"
-          >
-            {isOpeningPack ? 'Generiram...' : 'Otvori Paketić ✨'}
-          </button>
-          <button 
             onClick={() => setIsChatOpen(true)}
             className="bg-white/5 p-2 rounded-full hover:bg-white/10 transition border border-white/10"
           >
@@ -426,6 +704,37 @@ export default function App() {
         </div>
       </nav>
 
+      {/* View Switcher */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex gap-2 bg-black/60 backdrop-blur-xl p-2 rounded-2xl border border-white/10 shadow-2xl">
+        <button 
+          onClick={() => setView('album')}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest transition ${
+            view === 'album' ? 'bg-neon-cyan text-black' : 'text-white/60 hover:bg-white/5'
+          }`}
+        >
+          <Trophy size={16} />
+          Album
+        </button>
+        <button 
+          onClick={() => setView('stats')}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest transition ${
+            view === 'stats' ? 'bg-neon-cyan text-black' : 'text-white/60 hover:bg-white/5'
+          }`}
+        >
+          <BarChart3 size={16} />
+          Statistika
+        </button>
+        <button 
+          onClick={() => setView('shop')}
+          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest transition ${
+            view === 'shop' ? 'bg-neon-cyan text-black' : 'text-white/60 hover:bg-white/5'
+          }`}
+        >
+          <ShoppingBag size={16} />
+          Shop
+        </button>
+      </div>
+
       {/* Main Content */}
       <div className="relative z-10 pt-24 md:pt-32 px-4 md:px-6">
         <header className="max-w-6xl mx-auto text-center mb-12">
@@ -433,7 +742,7 @@ export default function App() {
           <h1 className="text-5xl md:text-8xl font-black italic tracking-tighter mb-6">
             DIGITALNI <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">ALBUM</span>
           </h1>
-          <p className="text-gray-400 text-sm uppercase tracking-[0.3em] mb-8">48 Nacija • 768 Sličica • Otvaraj Paketiće</p>
+          <p className="text-gray-400 text-sm uppercase tracking-[0.3em] mb-8">48 Nacija • 768 Sličica • Bosnuka Shop</p>
           
           {/* AI Motivator Section */}
           <div className="mt-8 max-w-lg mx-auto bg-neon-cyan/10 border border-neon-cyan/20 p-4 rounded-xl backdrop-blur-md">
@@ -477,7 +786,9 @@ export default function App() {
         </header>
 
         <main className="max-w-6xl mx-auto pb-24">
-          {/* Special Collection Section */}
+          {view === 'album' ? (
+            <>
+              {/* Special Collection Section */}
           <section className="mb-16">
             <div className="flex items-center gap-3 mb-8">
               <Trophy className="text-yellow-500" size={24} />
@@ -606,6 +917,12 @@ export default function App() {
               Resetiraj cijeli album
             </button>
           </div>
+            </>
+          ) : view === 'stats' ? (
+            <StatsSection />
+          ) : (
+            <ShopSection onOpenPack={openPack} isOpening={isOpeningPack} />
+          )}
         </main>
       </div>
 
