@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOSNUKA 26 | Digitalni Magazin & Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --midnight: #0a0e1a;
+            --neon-cyan: #00f2ff;
+            --gold: #ffcf40;
+            --mexico-green: #006847;
+            --canada-red: #ef3340;
+        }
+
+        body {
+            background: var(--midnight);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(180deg, #0a0e1a 0%, #001a2e 50%, #004b5e 100%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--neon-cyan);
+            transform: translateY(-5px);
+        }
+
+        .hero-title {
+            font-weight: 900;
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.9;
+            letter-spacing: -2px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .neon-text {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .magazine-section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .sticker-pack {
+            position: relative;
+            width: 180px;
+            height: 240px;
+            background: linear-gradient(135deg, #1a2a6c, #0a0e1a);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .sticker-pack::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .map-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--neon-cyan);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .map-dot:hover {
+            transform: scale(1.5);
+        }
+
+        .map-dot::before {
+            content: attr(data-city);
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: black;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .map-dot:hover::before {
+            opacity: 1;
+        }
+
+        .ai-status-pulse {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+    </style>
+</head>
+<body class="bg-[#0a0e1a]">
+
+    <!-- Navigacija -->
+    <nav class="fixed top-0 w-full z-50 px-8 py-4 flex justify-between items-center glass-card border-none rounded-none backdrop-blur-md">
+        <div class="font-black text-2xl tracking-tighter flex items-center">
+            BOSNUKA <span class="ml-2 font-light text-xs border border-white/20 px-2 py-0.5 rounded">2026</span>
+        </div>
+        <div class="hidden md:flex gap-10 font-bold uppercase text-[11px] tracking-[0.2em]">
+            <a href="#" class="hover:text-cyan-400 transition">Naslovna</a>
+            <a href="#mapa" class="hover:text-cyan-400 transition">Stadioni</a>
+            <a href="#reprezentacija" class="hover:text-cyan-400 transition">Zmajevi</a>
+            <a href="#shop" class="text-yellow-400 hover:scale-110 transition">Shop</a>
+        </div>
+        <button id="aiTrigger" class="text-[10px] font-mono bg-white/5 border border-white/10 px-4 py-2 rounded-full hover:bg-white/10 transition flex items-center">
+            <span class="ai-status-pulse"></span> GEMINI AI ACTIVE
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden gradient-bg">
+        <div class="z-10">
+            <h2 class="neon-text text-sm md:text-base mb-6 tracking-[0.6em] uppercase opacity-80">Sjeverna Amerika 2026</h2>
+            <h1 class="hero-title text-white mb-2">BOSNUKA</h1>
+            <p class="text-yellow-500 font-black text-2xl tracking-widest italic">WE ARE 26</p>
+            
+            <div class="mt-12 flex flex-col md:flex-row gap-6 justify-center">
+                <a href="#shop" class="bg-white text-black px-10 py-4 font-black uppercase text-sm tracking-widest hover:bg-cyan-400 transition">Naruči paketiće</a>
+                <a href="#mapa" class="border border-white/30 px-10 py-4 font-black uppercase text-sm tracking-widest hover:bg-white/5 transition">Istraži stadione</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- INTERAKTIVNA MAPA STADIONA -->
+    <section id="mapa" class="magazine-section">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-black mb-4 italic uppercase tracking-tighter">Interaktivna Mapa</h2>
+            <p class="text-gray-400 max-w-xl mx-auto">Kliknite na lokacije da vidite detalje o 16 gradova domaćina koji će ugostiti 48 reprezentacija.</p>
+        </div>
+
+        <div class="glass-card p-4 md:p-10 relative overflow-hidden bg-black/40">
+            <div class="relative w-full aspect-video bg-[#001a2e] rounded-xl border border-white/10 flex items-center justify-center">
+                <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 30px 30px;"></div>
+                
+                <span class="text-white/5 font-black text-[15vw] select-none uppercase">Host Cities</span>
+
+                <div class="map-dot" style="top: 30%; left: 25%;" data-city="Vancouver (BC Place)"></div>
+                <div class="map-dot" style="top: 40%; left: 75%;" data-city="New York (MetLife)"></div>
+                <div class="map-dot" style="top: 75%; left: 45%;" data-city="Mexico City (Azteca)"></div>
+                <div class="map-dot" style="top: 55%; left: 30%;" data-city="Los Angeles (SoFi)"></div>
+                <div class="map-dot" style="top: 35%; left: 65%;" data-city="Toronto (BMO Field)"></div>
+                <div class="map-dot" style="top: 60%; left: 80%;" data-city="Miami (Hard Rock)"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                <div class="p-6 border-l-4 border-cyan-500 bg-white/5">
+                    <h4 class="font-bold text-lg mb-1">USA</h4>
+                    <p class="text-xs text-gray-500">11 Gradova • Finale u NY</p>
+                </div>
+                <div class="p-6 border-l-4 border-mexico-green bg-white/5">
+                    <h4 class="font-bold text-lg mb-1">MEXICO</h4>
+                    <p class="text-xs text-gray-500">3 Grada • Otvaranje na Azteci</p>
+                </div>
+                <div class="p-6 border-l-4 border-canada-red bg-white/5">
+                    <h4 class="font-bold text-lg mb-1">CANADA</h4>
+                    <p class="text-xs text-gray-500">2 Grada • Vancouver & Toronto</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOP SEKCIJA -->
+    <section id="shop" class="magazine-section">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div>
+                <h2 class="text-5xl font-black italic uppercase tracking-tighter">BOSNUKA SHOP</h2>
+                <p class="text-cyan-400 font-mono text-xs uppercase tracking-widest mt-2">Dostupno odmah • Isporuka 24h</p>
+            </div>
+            <div class="flex gap-4">
+                <button class="bg-white/5 p-4 rounded-full border border-white/10 hover:bg-white/10">🔍</button>
+                <button class="bg-white/5 p-4 rounded-full border border-white/10 hover:bg-white/10">🛒 (3)</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="glass-card p-6 flex flex-col items-center text-center">
+                <div class="sticker-pack mb-6">
+                    <span class="text-white font-black text-xl italic">CLASSIC</span>
+                    <span class="text-yellow-400 font-bold text-xs uppercase">5 Sličica</span>
+                </div>
+                <h3 class="font-bold text-lg mb-1">Standardni Paketić</h3>
+                <p class="text-cyan-400 font-black mb-4">1.50 KM</p>
+                <button class="w-full bg-white text-black py-3 text-xs font-black uppercase hover:bg-cyan-400 transition">Dodaj u korpu</button>
+            </div>
+
+            <div class="glass-card p-6 flex flex-col items-center text-center border-yellow-500/30 bg-yellow-500/5">
+                <div class="sticker-pack mb-6 bg-gradient-to-br from-yellow-400 to-yellow-700">
+                    <span class="text-white font-black text-xl italic">PREMIUM</span>
+                    <span class="text-white font-bold text-xs uppercase tracking-widest">Grupna Faza</span>
+                </div>
+                <h3 class="font-bold text-lg mb-1">Premium Box (50)</h3>
+                <p class="text-yellow-500 font-black mb-4">70.00 KM</p>
+                <button class="w-full bg-yellow-500 text-black py-3 text-xs font-black uppercase hover:bg-yellow-400 transition">Naruči Box</button>
+            </div>
+
+            <div class="glass-card p-6 flex flex-col items-center text-center">
+                <div class="sticker-pack mb-6 bg-gradient-to-br from-blue-600 to-blue-900">
+                    <span class="text-white font-black text-xl italic uppercase">BIH Edition</span>
+                    <span class="text-yellow-300 font-bold text-xs uppercase">Zmajevi Set</span>
+                </div>
+                <h3 class="font-bold text-lg mb-1">Set "Zmajevi 26"</h3>
+                <p class="text-cyan-400 font-black mb-4">15.00 KM</p>
+                <button class="w-full bg-white text-black py-3 text-xs font-black uppercase hover:bg-cyan-400 transition">Dodaj u korpu</button>
+            </div>
+
+            <div class="glass-card p-6 flex flex-col items-center text-center">
+                <div class="sticker-pack mb-6 bg-[#1a1a1a]">
+                    <span class="text-white font-black text-xl italic">HARDCOVER</span>
+                    <span class="text-gray-400 font-bold text-xs uppercase">Limited Album</span>
+                </div>
+                <h3 class="font-bold text-lg mb-1">Tvrdi Povez Album</h3>
+                <p class="text-cyan-400 font-black mb-4">25.00 KM</p>
+                <button class="w-full bg-white text-black py-3 text-xs font-black uppercase hover:bg-cyan-400 transition">Dodaj u korpu</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- GEMINI AI MODAL -->
+    <div id="aiModal" class="fixed inset-0 z-[100] hidden items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleAI()"></div>
+        <div class="glass-card w-full max-w-2xl relative z-10 overflow-hidden bg-[#0d1117] border-cyan-500/30">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="ai-status-pulse"></div>
+                    <span class="font-black italic tracking-tighter uppercase">BOSNUKA AI SAVJETNIK</span>
+                </div>
+                <button onclick="toggleAI()" class="text-gray-500 hover:text-white">✕</button>
+            </div>
+            <div id="chatDisplay" class="h-80 p-6 overflow-y-auto space-y-4 text-sm font-light leading-relaxed">
+                <div class="bg-white/5 p-4 rounded-lg border-l-2 border-cyan-500">
+                    Zdravo! Ja sam tvoj lični asistent za Svjetsko Prvenstvo 2026. Možeš me pitati o stadionima, favoritima ili koji set sličica je najbolja investicija. Kako ti mogu pomoći danas?
+                </div>
+            </div>
+            <div class="p-6 bg-black/20 flex gap-2">
+                <input id="aiInput" type="text" placeholder="Pitajte AI nešto..." class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 outline-none focus:border-cyan-500 transition">
+                <button onclick="askAI()" class="bg-cyan-500 text-black px-6 py-2 font-bold rounded-lg uppercase text-xs tracking-widest">Pitaj</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-20 px-8 border-t border-white/10 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="hero-title text-2xl opacity-10 mb-8 italic">WE ARE 26</div>
+            <div class="flex justify-center gap-8 text-[10px] uppercase tracking-widest text-gray-500 mb-12 font-bold">
+                <a href="#" class="hover:text-white transition">Privatnost</a>
+                <a href="#" class="hover:text-white transition">Podrška</a>
+                <a href="#" class="hover:text-white transition">Reklamacije</a>
+                <a href="#" class="hover:text-white transition">Kontakt</a>
+            </div>
+            <p class="text-[9px] text-gray-600 uppercase tracking-[0.4em] leading-relaxed font-bold">
+                © 2026 BOSNUKA DIGITAL. Sva prava pridržana.<br>
+                Službeno licencirani proizvod Svjetskog prvenstva 2026.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const apiKey = ""; 
+
+        function toggleAI() {
+            const modal = document.getElementById('aiModal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
+        }
+
+        document.getElementById('aiTrigger').addEventListener('click', toggleAI);
+
+        async function askAI() {
+            const input = document.getElementById('aiInput');
+            const chat = document.getElementById('chatDisplay');
+            const query = input.value.trim();
+            if (!query) return;
+
+            chat.innerHTML += `<div class="text-right"><span class="bg-cyan-500/10 border border-cyan-500/20 px-4 py-2 rounded-lg inline-block text-cyan-400 font-medium">${query}</span></div>`;
+            input.value = '';
+            chat.scrollTop = chat.scrollHeight;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `Odgovori kao stručnjak za Svjetsko prvenstvo 2026 i album 'Bosnuka'. Ne spominji Panini. Pitanje na bosanskom: ${query}` }] }]
+                    })
+                });
+
+                const data = await response.json();
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Žao mi je, trenutno ne mogu odgovoriti.";
+
+                chat.innerHTML += `<div class="bg-white/5 p-4 rounded-lg border-l-2 border-yellow-500 text-gray-200">${aiText}</div>`;
+                chat.scrollTop = chat.scrollHeight;
+            } catch (error) {
+                chat.innerHTML += `<div class="text-red-400 text-xs">Greška u povezivanju sa AI asistentom.</div>`;
+            }
+        }
+
+        document.getElementById('aiInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') askAI();
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.backgroundColor = 'rgba(10, 14, 26, 0.95)';
+            } else {
+                nav.style.backgroundColor = 'transparent';
+            }
+        });
+    </script>
+</body>
+</html>
